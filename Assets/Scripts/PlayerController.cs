@@ -138,5 +138,6 @@ public class PlayerController : MonoBehaviour
     {
         _isAlive = false;
         animator.SetTrigger("Death");
+        GameObject.FindWithTag("LosePanel").SetActive(true);
     }
 }
