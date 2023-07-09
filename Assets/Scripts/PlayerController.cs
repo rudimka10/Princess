@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
@@ -136,7 +137,20 @@ public class PlayerController : MonoBehaviour
 
     public void OnPlayerDeath()
     {
-        _isAlive = false;
-        animator.SetTrigger("Death");
+        if (_isAlive)
+        {
+            _isAlive = false;
+            animator.SetTrigger("death");
+            var att = GetComponent<PlayerAttack>();
+            if (att != null)
+                att.enabled = false;
+
+            Invoke("Reload", 2);
+        }
+    }
+
+    private void Reload()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

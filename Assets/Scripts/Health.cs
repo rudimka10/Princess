@@ -20,6 +20,8 @@ public class Health : MonoBehaviour
 
     HealthBar _healthBar;
 
+    public bool IsAlive => _health > 0;
+
     private void Start()
     {
         if (_connectHealthBarOnStart)
