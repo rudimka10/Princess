@@ -39,12 +39,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private string _jumpingAxis = "Jump";
 
+    [Space]
+
+    [SerializeField]
+    private Animator animator;
+
     private Transform _localTransform;
     private Rigidbody2D _rigidbody;
 
     private float _horizontalInput;
     private bool _directionIsRight;
     private int _jumpsDone;
+    private bool _isAlive = true;
 
     public float GroundCheckRadius => _groundCheckRadius;
 
@@ -60,12 +66,28 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (!_isAlive)
+            return;
+
         _horizontalInput = Input.GetAxisRaw(_horizontalAxis);
 
         RotateToMovementDirection();
 
         if (Input.GetButtonDown(_jumpingAxis))
             Jump();
+
+        UpdateAnimator();
+    }
+
+    private void UpdateAnimator()
+    {
+        int animatorGravity = 0;
+
+        if (!IsGrounded())
+            animatorGravity = _rigidbody.velocity.y < -0.3f ? -1 : 1;
+
+        animator.SetInteger("gravity", animatorGravity);
+        animator.SetBool("running", Mathf.Abs(_horizontalInput) > 0);
     }
 
     private void FixedUpdate()
@@ -110,5 +132,11 @@ public class PlayerController : MonoBehaviour
     public void TeleportTo(Vector3 target)
     {
         _localTransform.position = new Vector3(target.x, target.y, 0);
+    }
+
+    public void OnPlayerDeath()
+    {
+        _isAlive = false;
+        animator.SetTrigger("Death");
     }
 }

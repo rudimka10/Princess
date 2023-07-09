@@ -62,7 +62,6 @@ public class EnemyController : MonoBehaviour
 
     private Transform _localTransform;
     private Rigidbody2D _rigidbody;
-    private bool _directionIsRight = true;
 
     private bool _groundDetected;
     private bool _wallDetected;
@@ -95,12 +94,13 @@ public class EnemyController : MonoBehaviour
 
         if (playerFinded)
         {
-            _directionIsRight = player.transform.position.x > _localTransform.position.x;
-            RotateToMoveDirection();
+            if (player.transform.position.x > _localTransform.position.x)
+                _localTransform.localEulerAngles = Vector3.zero;
+            else
+                _localTransform.localEulerAngles = new Vector3(0, 180, 0);
 
             if (playerInRange)
             {
-                Debug.Log("in range");
                 if (_attackTimer <= 0 && player.TryGetComponent(out Health health))
                 {
                     health.Damage(_damage);
@@ -109,28 +109,14 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                Debug.Log("not in range");
                 UpdateEnvironmentInformation();
                 ApplyMovementLogic();
             }
             return;
         }
 
-        UpdateMoveDirection();
         UpdateEnvironmentInformation();
         ApplyMovementLogic();
-    }
-
-    private void UpdateMoveDirection()
-    {
-        if (_directionIsRight && _localTransform.position.x > _xPatrolMax)
-        {
-            _directionIsRight = false;
-        }
-        else if (!_directionIsRight && _localTransform.position.x < _xPatrolMin)
-        {
-            _directionIsRight = true;
-        }
     }
 
     private void UpdateEnvironmentInformation()
@@ -153,7 +139,7 @@ public class EnemyController : MonoBehaviour
         }
         else if (_wallDetected || !_pitDetected)
         {
-            _directionIsRight = !_directionIsRight;
+            _localTransform.localEulerAngles = new Vector3(0, _localTransform.localEulerAngles.y == 0 ? 180 : 0, 0);
         }
         else
         {
@@ -175,13 +161,13 @@ public class EnemyController : MonoBehaviour
 
     private void Move()
     {
-        float xMovement = (_directionIsRight ? 1 : -1) * _movementSpeed;
+        float xMovement = (_localTransform.localEulerAngles.y == 0 ? 1 : -1) * _movementSpeed;
         _rigidbody.velocity = new Vector2(xMovement, _rigidbody.velocity.y);
     }
 
     private void RotateToMoveDirection()
     {
-        _localTransform.localEulerAngles = new Vector3(0, _directionIsRight ? 0 : 180, 0);
+        _localTransform.localEulerAngles = new Vector3(0, _localTransform.localEulerAngles.y == 0 ? 0 : 180, 0);
     }
 
     private bool TryDetectPlayer(out PlayerController player, out bool inRange)
@@ -189,7 +175,6 @@ public class EnemyController : MonoBehaviour
         player = FindObjectOfType<PlayerController>();
         if (player == null)
         {
-            Debug.Log("1");
             inRange = false;
             return false;
         }
@@ -199,17 +184,14 @@ public class EnemyController : MonoBehaviour
         if (!inRange)
             return false;
 
-        Debug.Log("indist");
 
         var hit = Physics2D.Linecast(_aimPoint.position, player.transform.position);
 
         if (hit.collider == null)
             return false;
 
-        Debug.Log($"{hit.transform.gameObject.name}");
         if (hit.transform.TryGetComponent(out PlayerController findedPlayer))
             return true;
-        Debug.Log("++++");
 
         return false;
     }
