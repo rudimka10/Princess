@@ -50,7 +50,6 @@ public class Platform : MonoBehaviour
 
     private void UpdateTargetIfNeed()
     {
-        Debug.Log($"target={_targetPointIndex} all={_points.Count}");
         if (_localTransform.position.x != _points[_targetPointIndex].x || _localTransform.position.y != _points[_targetPointIndex].y)
             return;
 
