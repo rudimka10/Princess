@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f64a1bb7c68d8c54786d41014d34d830
+guid: df9508aaa8fd75e4db7a4045455fc692
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -42,12 +42,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 48
+  spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -115,9 +115,6 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-<<<<<<<< HEAD:Assets/Resources/Icons/Health Image.png.meta
-    sprites: []
-========
     sprites:
     - serializedVersion: 2
       name: Idle_0
@@ -134,8 +131,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e913d803e985cd041851420b3de31160
-      internalID: -272617802
+      spriteID: 95b22e26b0d474546854fe6901c969d3
+      internalID: 2075347552
       vertices: []
       indices: 
       edges: []
@@ -145,7 +142,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 867
-        y: 144
+        y: 143
         width: 142
         height: 153
       alignment: 9
@@ -155,8 +152,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4bd5745b6f20b904c8956442ecb8c892
-      internalID: -546278624
+      spriteID: 2154ca5d7fb1a1d468350213f1d9445a
+      internalID: 1785959916
       vertices: []
       indices: 
       edges: []
@@ -176,8 +173,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9abe25ff27115424a995c825df5cc5b6
-      internalID: 2105331920
+      spriteID: 01ea57249b7dd854281d60bdd3241c66
+      internalID: 1422599894
       vertices: []
       indices: 
       edges: []
@@ -197,8 +194,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3c71d71314f68b44eb8cd9927465393d
-      internalID: -934528425
+      spriteID: 911c664d33f60364f9b2051863384b6a
+      internalID: 427800027
       vertices: []
       indices: 
       edges: []
@@ -218,8 +215,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3aab0a5332be7b44ea63af96677f354d
-      internalID: 568535684
+      spriteID: d050df0ce4188d146b3a1666a3090120
+      internalID: 74630163
       vertices: []
       indices: 
       edges: []
@@ -239,13 +236,12 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8f5d4127eece43c43b52f996e76bad03
-      internalID: 208367383
+      spriteID: 21df6d4eeea6b3b49b0301854244e072
+      internalID: 1017193101
       vertices: []
       indices: 
       edges: []
       weights: []
->>>>>>>> origin/master:Assets/Textures/Player/Idle.png.meta
     outline: []
     physicsShape: []
     bones: []
@@ -256,7 +252,13 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Idle_0: 2075347552
+      Idle_1: 1785959916
+      Idle_2: 1422599894
+      Idle_3: 427800027
+      Idle_4: 74630163
+      Idle_5: 1017193101
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
