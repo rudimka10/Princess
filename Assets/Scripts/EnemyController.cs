@@ -172,6 +172,14 @@ public class EnemyController : MonoBehaviour
         {
             _localTransform.localEulerAngles = new Vector3(0, _localTransform.localEulerAngles.y == 0 ? 180 : 0, 0);
         }
+        else if (_localTransform.localEulerAngles.y == 0 && _localTransform.position.x > _xPatrolMax)
+        {
+            _localTransform.localEulerAngles = new Vector3(0, 180, 0);
+        }
+        else if (_localTransform.localEulerAngles.y == 180 && _localTransform.position.x < _xPatrolMin)
+        {
+            _localTransform.localEulerAngles = Vector3.zero;
+        }
         else
         {
             Move();
@@ -229,9 +237,14 @@ public class EnemyController : MonoBehaviour
 
     public void OnEnemyDeath()
     {
-        _isAlive = false;
-        animator.SetTrigger("Death");
-        foreach (var c in GetComponentsInChildren<Collider2D>())
-            c.enabled = false;
+        if (_isAlive)
+        {
+            _isAlive = false;
+            animator.SetTrigger("death");
+            var c = GetComponent<Collider2D>();
+            if (c != null)
+                c.enabled = false;
+            this.enabled = false;
+        }
     }
 }

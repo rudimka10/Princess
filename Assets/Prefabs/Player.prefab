@@ -345,7 +345,7 @@ MonoBehaviour:
   _attackDelay: 0.4
   _damage: 1
   _aimPoint: {fileID: 5909930802737088252}
-  _searchRadius: 1
+  _searchRadius: 1.5
   animator: {fileID: 584693988758124475}
 --- !u!1 &3755011757154908916
 GameObject:

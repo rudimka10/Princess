@@ -24,12 +24,11 @@ namespace Controllers.Sound
 
         private void Awake()
         {
-            DontDestroyOnLoad(this);
             Debug.Log("Awake of controller");
-            //SetAudioVolume(GetAudioVolume());
-            //SetMusicVolume(GetMusicVolume());
+            SetAudioVolume(GetAudioVolume());
+            SetMusicVolume(GetMusicVolume());
             PlayEmbient();
-            //InitPrefs();
+            InitPrefs();
         }
 
         private static void InitPrefs()
@@ -114,7 +113,7 @@ namespace Controllers.Sound
         
         public void PlayEmbient(bool isBoss = false)
         {
-            _audioSourceEmbient.clip = isBoss ? _bossAmbient : _ambient;
+            _audioSourceEmbient.clip = isBoss ? _ambient : _bossAmbient;
             _audioSourceEmbient.Play();
         }
 

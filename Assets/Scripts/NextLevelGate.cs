@@ -13,12 +13,4 @@ public class NextLevelGate : MonoBehaviour
             _levelStarter.StartLevelWithIndex();
         }
     }
-
-    private void OnTriggerEnter2D(Collider2D col)
-    {
-        if (col.transform.tag == "Player")
-        {
-            _levelStarter.StartLevelWithIndex();
-        }
-    }
 }
