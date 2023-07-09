@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Net;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -60,6 +59,11 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     private Transform _aimPoint;
 
+    [Space]
+
+    [SerializeField]
+    private Animator animator;
+
     private Transform _localTransform;
     private Rigidbody2D _rigidbody;
 
@@ -83,6 +87,28 @@ public class EnemyController : MonoBehaviour
     {
         _localTransform = GetComponent<Transform>();
         _rigidbody = GetComponent<Rigidbody2D>();
+    }
+
+    private void Start()
+    {
+        animator.SetBool("running", true);
+    }
+
+    private void Update()
+    {
+        UpdateAnimator();
+    }
+
+    private void UpdateAnimator()
+    {
+        int animatorGravity = 0;
+
+        if (!_groundDetected)
+            animatorGravity = _rigidbody.velocity.y < -0.9f ? -1 : 1;
+
+        Debug.Log($"{_rigidbody.velocity.y}");
+
+        animator.SetInteger("gravity", animatorGravity);
     }
 
     private void FixedUpdate()
