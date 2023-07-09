@@ -14,4 +14,12 @@ public class Ladder : MonoBehaviour
             col.transform.position = new Vector3(_ladderToSend.transform.position.x - 10, _ladderToSend.transform.position.y, _ladderToSend.transform.position.z);
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.transform.tag == "Player")
+        {
+            col.transform.position = new Vector3(_ladderToSend.transform.position.x - 10, _ladderToSend.transform.position.y, _ladderToSend.transform.position.z);
+        }
+    }
 }

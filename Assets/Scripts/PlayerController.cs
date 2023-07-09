@@ -1,10 +1,12 @@
+using Controllers.Sound;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
-
+    [SerializeField] private AudioClip _death;
+    
     [SerializeField]
     private bool _rotateToMoveDirection = true;
 
@@ -146,12 +148,14 @@ public class PlayerController : MonoBehaviour
                 att.enabled = false;
 
             Invoke("Reload", 2);
-            GameObject.FindWithTag("LosePanel").SetActive(true);
+            SoundController.Instance.PlaySound(_death);
+            //GameObject.FindWithTag("LosePanel").SetActive(true);
         }
     }
 
     private void Reload()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        GameObject.FindWithTag("LosePanel").SetActive(true);
+
     }
 }

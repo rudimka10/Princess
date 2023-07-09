@@ -287,9 +287,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c18142284ec8634194c4916d69d00b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _death: {fileID: 0}
   _rotateToMoveDirection: 1
   _movementSpeed: 9
-  _jumpingPower: 11
+  _jumpingPower: 10
   _jumpsLimit: 1
   _groundCheckOffset: {x: 0, y: -1}
   _groundCheckRadius: 0.4
