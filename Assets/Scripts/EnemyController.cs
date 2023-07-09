@@ -72,6 +72,7 @@ public class EnemyController : MonoBehaviour
     private bool _corniceDetected;
     private bool _pitDetected;
     private float _attackTimer;
+    private bool _isAlive = true;
 
     public LayersDetectorSettings GroundDetector => _groundDetector;
 
@@ -96,7 +97,8 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        UpdateAnimator();
+        if (!_isAlive)
+            UpdateAnimator();
     }
 
     private void UpdateAnimator()
@@ -113,7 +115,9 @@ public class EnemyController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_attackTimer > 0)
+        if (!_isAlive)
+            return;
+            if (_attackTimer > 0)
             _attackTimer -= Time.fixedDeltaTime;
 
         bool playerFinded = TryDetectPlayer(out PlayerController player, out bool playerInRange);
@@ -131,6 +135,7 @@ public class EnemyController : MonoBehaviour
                 {
                     health.Damage(_damage);
                     _attackTimer = _attackDelay;
+                    animator.SetTrigger("attack");
                 }
             }
             else
@@ -220,5 +225,13 @@ public class EnemyController : MonoBehaviour
             return true;
 
         return false;
+    }
+
+    public void OnEnemyDeath()
+    {
+        _isAlive = false;
+        animator.SetTrigger("Death");
+        foreach (var c in GetComponentsInChildren<Collider2D>())
+            c.enabled = false;
     }
 }

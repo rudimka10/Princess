@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
@@ -136,8 +137,21 @@ public class PlayerController : MonoBehaviour
 
     public void OnPlayerDeath()
     {
-        _isAlive = false;
-        animator.SetTrigger("Death");
-        GameObject.FindWithTag("LosePanel").SetActive(true);
+        if (_isAlive)
+        {
+            _isAlive = false;
+            animator.SetTrigger("death");
+            var att = GetComponent<PlayerAttack>();
+            if (att != null)
+                att.enabled = false;
+
+            Invoke("Reload", 2);
+            GameObject.FindWithTag("LosePanel").SetActive(true);
+        }
+    }
+
+    private void Reload()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
