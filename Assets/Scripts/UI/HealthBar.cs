@@ -5,17 +5,16 @@ using UnityEngine.UI;
 public class HealthBar : MonoBehaviour
 {
 
-    [SerializeField] List<Image> _images = new();
-
-    [Space]
-
     [SerializeField] 
     private Color _enabledColor = Color.white;
 
     [SerializeField]
     private Color _disabledColor = Color.black;
 
-    public int Value
+	[SerializeField]
+	private List<Image> _images = new();
+
+	public int Value
     {
         set
         {

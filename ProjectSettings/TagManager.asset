@@ -42,3 +42,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Objects
+    uniqueID: 2249495063
+    locked: 0
+  - name: Entities
+    uniqueID: 481923509
+    locked: 0
+  - name: VFX
+    uniqueID: 4259429309
+    locked: 0
+  - name: Caves
+    uniqueID: 3320046849
+    locked: 0
+  - name: UI
+    uniqueID: 2808648297
+    locked: 0

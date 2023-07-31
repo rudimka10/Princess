@@ -9,7 +9,7 @@ public class CameraFollowEditor : Editor
     Camera _camera;
 
     Vector3 _bottomLeft, _bottomRight, _topRight, _topLeft;
-    float _left, _right, _top, _bottom;
+    float _left, _right, _top, _bottom, _dX;
 
     private void OnEnable()
     {
@@ -19,15 +19,12 @@ public class CameraFollowEditor : Editor
 
     private void OnSceneGUI()
     {
-        Rect accessibleAreaForCamera = _cameraFollow.AccessibleArea;
+		_dX = _camera.orthographicSize * _camera.aspect;
 
-        float dX = _camera.orthographicSize * _camera.aspect;
-        float dY = _camera.orthographicSize;
-
-        _left = accessibleAreaForCamera.xMin - dX;
-        _right = accessibleAreaForCamera.xMax + dX;
-        _top = accessibleAreaForCamera.yMax + dY;
-        _bottom = accessibleAreaForCamera.yMin - dY;
+        _left = _cameraFollow.AccessibleArea.xMin - _dX;
+        _right = _cameraFollow.AccessibleArea.xMax + _dX;
+        _top = _cameraFollow.AccessibleArea.yMax + _camera.orthographicSize;
+        _bottom = _cameraFollow.AccessibleArea.yMin - _camera.orthographicSize;
 
         _bottomLeft = new Vector3(_left, _bottom, 0);
         _bottomRight = new Vector3(_right, _bottom, 0);
