@@ -2,249 +2,215 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class EnemyController : MonoBehaviour
-{
+public class EnemyController : MonoBehaviour {
 
-    [SerializeField]
-    private float _movementSpeed;
+	[SerializeField]
+	private float _movementSpeed;
 
-    [SerializeField]
-    private Vector2 _jumpingPower;
+	[SerializeField]
+	private Vector2 _jumpingPower;
 
-    [SerializeField]
-    private float _xPatrolMin;
+	[SerializeField]
+	private float _xPatrolMin;
 
-    [SerializeField]
-    private float _xPatrolMax;
+	[SerializeField]
+	private float _xPatrolMax;
 
-    [SerializeField]
-    private bool _pursuitPlayer = true;
+	[Space]
 
-    [Space]
+	[SerializeField]
+	private LayersDetectorSettings _groundDetector = new();
 
-    [SerializeField]
-    private LayersDetectorSettings _groundDetector = new();
+	[SerializeField]
+	private LayersDetectorSettings _wallDetector = new();
 
-    [SerializeField]
-    private LayersDetectorSettings _wallDetector = new();
+	[SerializeField]
+	private LayersDetectorSettings _corniceDetector = new();
 
-    [SerializeField]
-    private LayersDetectorSettings _corniceDetector = new();
+	[SerializeField]
+	private LayersDetectorSettings _pitDetector = new();
 
-    [SerializeField]
-    private LayersDetectorSettings _pitDetector = new();
+	[Header("Player Detecting Settings")]
 
-    [Header("Player Detecting Settings")]
+	[SerializeField]
+	private float _maxAttackingAngle;
 
-    [SerializeField]
-    private float _maxAttackingAngle;
+	[SerializeField]
+	private float _minAttackingAngle;
 
-    [SerializeField]
-    private float _minAttackingAngle;
+	[SerializeField]
+	private float _Range = 2f;
 
-    [SerializeField]
-    private float _Range = 2f;
+	[Header("Attacking Settings")]
 
-    [Header("Attacking Settings")]
+	[SerializeField]
+	private int _damage = 1;
 
-    [SerializeField]
-    private int _damage = 1;
+	[SerializeField]
+	private float _attackDelay = 0.8f;
 
-    [SerializeField]
-    private float _attackDelay = 0.8f;
+	[SerializeField]
+	private Rigidbody2D _rangedAttackProjectile;
 
-    [SerializeField]
-    private Rigidbody2D _rangedAttackProjectile;
+	[SerializeField]
+	private Transform _aimPoint;
 
-    [SerializeField]
-    private Transform _aimPoint;
+	[Space]
 
-    [Space]
+	[SerializeField]
+	private Animator animator;
 
-    [SerializeField]
-    private Animator animator;
+	private Transform _localTransform;
+	private Rigidbody2D _rigidbody;
 
-    private Transform _localTransform;
-    private Rigidbody2D _rigidbody;
+	private bool _groundDetected;
+	private bool _wallDetected;
+	private bool _corniceDetected;
+	private bool _pitDetected;
+	private float _attackTimer;
+	private bool _isAlive = true;
 
-    private bool _groundDetected;
-    private bool _wallDetected;
-    private bool _corniceDetected;
-    private bool _pitDetected;
-    private float _attackTimer;
-    private bool _isAlive = true;
+	public LayersDetectorSettings GroundDetector => _groundDetector;
 
-    public LayersDetectorSettings GroundDetector => _groundDetector;
+	public LayersDetectorSettings WallDetector => _wallDetector;
 
-    public LayersDetectorSettings WallDetector => _wallDetector;
+	public LayersDetectorSettings CorniceDetector => _corniceDetector;
 
-    public LayersDetectorSettings CorniceDetector => _corniceDetector;
+	public LayersDetectorSettings PitDetector => _pitDetector;
 
-    public LayersDetectorSettings PitDetector => _pitDetector;
+	public float AttackRange => _Range;
 
-    public float AttackRange => _Range;
+	private void Awake() {
+		_localTransform = GetComponent<Transform>();
+		_rigidbody = GetComponent<Rigidbody2D>();
+	}
 
-    private void Awake()
-    {
-        _localTransform = GetComponent<Transform>();
-        _rigidbody = GetComponent<Rigidbody2D>();
-    }
+	private void Start() {
+		animator.SetBool("running", true);
+	}
 
-    private void Start()
-    {
-        animator.SetBool("running", true);
-    }
+	private void Update() {
+		if (!_isAlive)
+			UpdateAnimator();
+	}
 
-    private void Update()
-    {
-        if (!_isAlive)
-            UpdateAnimator();
-    }
+	private void FixedUpdate() {
+		if (!_isAlive)
+			return;
 
-    private void UpdateAnimator()
-    {
-        int animatorGravity = 0;
+		/*if (_attackTimer > 0)
+			_attackTimer -= Time.fixedDeltaTime;
 
-        if (!_groundDetected)
-            animatorGravity = _rigidbody.velocity.y < -0.9f ? -1 : 1;
+		bool playerFinded = TryDetectPlayer(out Player player, out bool playerInRange);
 
-        Debug.Log($"{_rigidbody.velocity.y}");
+		if (playerFinded) {
+			if (player.transform.position.x > _localTransform.position.x)
+				_localTransform.localEulerAngles = Vector3.zero;
+			else
+				_localTransform.localEulerAngles = new Vector3(0, 180, 0);
 
-        animator.SetInteger("gravity", animatorGravity);
-    }
+			if (playerInRange) {
+				if (_attackTimer <= 0 && player.TryGetComponent(out Health health)) {
+					health.Damage(_damage);
+					_attackTimer = _attackDelay;
+					animator.SetTrigger("attack");
+				}
+			} else {
+				UpdateEnvironmentInformation();
+				ApplyMovementLogic();
+			}
+			return;
+		}*/
 
-    private void FixedUpdate()
-    {
-        if (!_isAlive)
-            return;
-            if (_attackTimer > 0)
-            _attackTimer -= Time.fixedDeltaTime;
+		UpdateEnvironmentInformation();
+		ApplyMovementLogic();
+	}
 
-        bool playerFinded = TryDetectPlayer(out PlayerController player, out bool playerInRange);
+	private void UpdateAnimator() {
+		int animatorGravity = 0;
 
-        if (playerFinded)
-        {
-            if (player.transform.position.x > _localTransform.position.x)
-                _localTransform.localEulerAngles = Vector3.zero;
-            else
-                _localTransform.localEulerAngles = new Vector3(0, 180, 0);
+		if (!_groundDetected)
+			animatorGravity = _rigidbody.velocity.y < -0.9f ? -1 : 1;
 
-            if (playerInRange)
-            {
-                if (_attackTimer <= 0 && player.TryGetComponent(out Health health))
-                {
-                    health.Damage(_damage);
-                    _attackTimer = _attackDelay;
-                    animator.SetTrigger("attack");
-                }
-            }
-            else
-            {
-                UpdateEnvironmentInformation();
-                ApplyMovementLogic();
-            }
-            return;
-        }
+		Debug.Log($"{_rigidbody.velocity.y}");
 
-        UpdateEnvironmentInformation();
-        ApplyMovementLogic();
-    }
+		animator.SetInteger("gravity", animatorGravity);
+	}
 
-    private void UpdateEnvironmentInformation()
-    {
-        _groundDetected = _groundDetector.IsDetectedFor(transform);
-        _wallDetected = _wallDetector.IsDetectedFor(transform);
-        _corniceDetected = _corniceDetector.IsDetectedFor(transform);
-        _pitDetected = _pitDetector.IsDetectedFor(transform);
-    }
+	private void UpdateEnvironmentInformation() {
+		_groundDetected = _groundDetector.IsDetectedFor(transform);
+		_wallDetected = _wallDetector.IsDetectedFor(transform);
+		_corniceDetected = _corniceDetector.IsDetectedFor(transform);
+		_pitDetected = _pitDetector.IsDetectedFor(transform);
+	}
 
-    private void ApplyMovementLogic()
-    {
-        if (!_groundDetected)
-            return;
+	private void ApplyMovementLogic() {
+		if (!_groundDetected)
+			return;
 
 
-        if (_wallDetected && !_corniceDetected)
-        {
-            StartCoroutine(Jump());
-        }
-        else if (_wallDetected || !_pitDetected)
-        {
-            _localTransform.localEulerAngles = new Vector3(0, _localTransform.localEulerAngles.y == 0 ? 180 : 0, 0);
-        }
-        else if (_localTransform.localEulerAngles.y == 0 && _localTransform.position.x > _xPatrolMax)
-        {
-            _localTransform.localEulerAngles = new Vector3(0, 180, 0);
-        }
-        else if (_localTransform.localEulerAngles.y == 180 && _localTransform.position.x < _xPatrolMin)
-        {
-            _localTransform.localEulerAngles = Vector3.zero;
-        }
-        else
-        {
-            Move();
-        }
+		if (_wallDetected && !_corniceDetected) {
+			StartCoroutine(Jump());
+		} else if (_wallDetected || !_pitDetected) {
+			_localTransform.localEulerAngles = new Vector3(0, _localTransform.localEulerAngles.y == 0 ? 180 : 0, 0);
+		} else if (_localTransform.localEulerAngles.y == 0 && _localTransform.position.x > _xPatrolMax) {
+			_localTransform.localEulerAngles = new Vector3(0, 180, 0);
+		} else if (_localTransform.localEulerAngles.y == 180 && _localTransform.position.x < _xPatrolMin) {
+			_localTransform.localEulerAngles = Vector3.zero;
+		} else {
+			Move();
+		}
 
-        RotateToMoveDirection();
-    }
+		RotateToMoveDirection();
+	}
 
-    private IEnumerator Jump()
-    {
-        yield return null;
+	private IEnumerator Jump() {
+		yield return null;
 
-        float directionSign = _localTransform.localEulerAngles.y == 0 ? 1 : -1;
-        if (Mathf.Abs(_rigidbody.velocity.x) < 1)
-            directionSign *= 2;
-        _rigidbody.velocity = new Vector2(_rigidbody.velocity.x + _jumpingPower.x * directionSign, _jumpingPower.y);
-    }
+		float directionSign = _localTransform.localEulerAngles.y == 0 ? 1 : -1;
+		if (Mathf.Abs(_rigidbody.velocity.x) < 1)
+			directionSign *= 2;
+		_rigidbody.velocity = new Vector2(_rigidbody.velocity.x + _jumpingPower.x * directionSign, _jumpingPower.y);
+	}
 
-    private void Move()
-    {
-        float xMovement = (_localTransform.localEulerAngles.y == 0 ? 1 : -1) * _movementSpeed;
-        _rigidbody.velocity = new Vector2(xMovement, _rigidbody.velocity.y);
-    }
+	private void Move() {
+		float xMovement = (_localTransform.localEulerAngles.y == 0 ? 1 : -1) * _movementSpeed;
+		_rigidbody.velocity = new Vector2(xMovement, _rigidbody.velocity.y);
+	}
 
-    private void RotateToMoveDirection()
-    {
-        _localTransform.localEulerAngles = new Vector3(0, _localTransform.localEulerAngles.y == 0 ? 0 : 180, 0);
-    }
+	private void RotateToMoveDirection() {
+		_localTransform.localEulerAngles = new Vector3(0, _localTransform.localEulerAngles.y == 0 ? 0 : 180, 0);
+	}
 
-    private bool TryDetectPlayer(out PlayerController player, out bool inRange)
-    {
-        player = FindObjectOfType<PlayerController>();
-        if (player == null)
-        {
-            inRange = false;
-            return false;
-        }
+	private bool TryDetectPlayer(out Player player, out bool inRange) {
+		player = FindObjectOfType<Player>();
+		if (player == null) {
+			inRange = false;
+			return false;
+		}
 
-        inRange = Vector3.Distance(_localTransform.position, player.transform.position) <= _Range;
+		inRange = Vector3.Distance(_localTransform.position, player.transform.position) <= _Range;
 
-        if (!inRange)
-            return false;
+		if (!inRange)
+			return false;
 
 
-        var hit = Physics2D.Linecast(_aimPoint.position, player.transform.position);
+		var hit = Physics2D.Linecast(_aimPoint.position, player.transform.position);
 
-        if (hit.collider == null)
-            return false;
+		if (hit.collider == null)
+			return false;
 
-        if (hit.transform.TryGetComponent(out PlayerController findedPlayer))
-            return true;
+		if (hit.transform.TryGetComponent(out Player findedPlayer))
+			return true;
 
-        return false;
-    }
+		return false;
+	}
 
-    public void OnEnemyDeath()
-    {
-        if (_isAlive)
-        {
-            _isAlive = false;
-            animator.SetTrigger("death");
-            var c = GetComponent<Collider2D>();
-            if (c != null)
-                c.enabled = false;
-            this.enabled = false;
-        }
-    }
+	public void OnEnemyDeath() {
+		if (_isAlive) {
+			_isAlive = false;
+			animator.SetTrigger("death");
+			this.enabled = false;
+		}
+	}
 }

@@ -45,6 +45,9 @@ TagManager:
   - name: Objects
     uniqueID: 2249495063
     locked: 0
+  - name: Hints
+    uniqueID: 1235687407
+    locked: 0
   - name: Entities
     uniqueID: 481923509
     locked: 0

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
@@ -7,11 +8,11 @@ public class AttackSettings {
 
 	public float delay = 0.4f;
 
-	public float range = 2;
-
 	public int damage = 1;
 
-	public Transform origin;
+	public float normalForce = 1;
+
+	public BoxCollider2D attackZone;
 
 	public string animatorKey = "attack";
 
@@ -30,5 +31,15 @@ public class AttackSettings {
 
 	public void ResetTimer() {
 		_timer = 0;
+	}
+
+	public List<Health> FindAttackedTargets() {
+		var targetsInRange = new List<Health>();
+
+		foreach (var target in GameObject.FindObjectsOfType<Health>())
+			if (attackZone.bounds.Contains(target.transform.position))
+				targetsInRange.Add(target);
+
+		return targetsInRange;
 	}
 }

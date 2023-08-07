@@ -20,7 +20,7 @@ public class Arrow : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D c)
     {
-        if (c.gameObject.TryGetComponent(out PlayerController player))
+        if (c.gameObject.TryGetComponent(out Player player))
         {
             var health = player.GetComponent<Health>();
             health?.Damage(_damage);

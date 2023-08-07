@@ -30,10 +30,13 @@ public class Player : MonoBehaviour {
 	private Animator _animator;
 
 	[SerializeField]
-	private AttackSettings _piercingAttackSettings;
+	private DevastatingBlowSkill _devastatingBlowSkill;
 
 	[SerializeField]
-	private AttackSettings _devastatingBlowSettings;
+	private PiercingAttackSkill _piercingAttackSkill;
+
+	[SerializeField]
+	private AttackSettings _blockSettings;
 
 	#endregion
 
@@ -134,36 +137,44 @@ public class Player : MonoBehaviour {
 	#region ATTACKING
 
 	private void ResetAttackTimers() {
-		_piercingAttackSettings.ResetTimer();
-		_devastatingBlowSettings.ResetTimer();
+		_blockSettings.ResetTimer();
 	}
 
 	private void HandleAttackingInput() {
-		if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) {
-			if (_piercingAttackSettings.IsReady) {
-				OnPiercingAttack();
-			}
+		if (Input.GetButtonDown("Skill1")) {
+			OnPiercingAttack();
 
-		} else if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl)) {
-			if (_devastatingBlowSettings.IsReady) {
-				OnDevastatingBlowAttack();
-			}
+		} else if (Input.GetButtonDown("Skill2")) {
+			OnDevastatingBlowAttack();
+
+		} else if (Input.GetButtonDown("Block")) {
+			OnBlock();
 		}
 	}
 
 	private void TickAttacks() {
-		_piercingAttackSettings.TickTimer(Time.fixedDeltaTime);
-		_devastatingBlowSettings.TickTimer(Time.fixedDeltaTime);
+		_blockSettings.TickTimer(Time.fixedDeltaTime);
 	}
 
 	private void OnPiercingAttack() {
-		_animator.SetTrigger("attack1");
-		_piercingAttackSettings.SetupTimer();
+		if (_piercingAttackSkill.IsReady) {
+			_animator.SetTrigger("attack1");
+			_piercingAttackSkill.Cast(_health);
+		}
 	}
 
 	private void OnDevastatingBlowAttack() {
-		_animator.SetTrigger("attack2");
-		_devastatingBlowSettings.SetupTimer();
+		if (_devastatingBlowSkill.IsReady) {
+			_animator.SetTrigger(_devastatingBlowSkill.animatorKey);
+			_devastatingBlowSkill.Cast(_health);
+		}
+	}
+
+	private void OnBlock() {
+		if (_blockSettings.IsReady) {
+			_animator.SetTrigger("block");
+			_blockSettings.SetupTimer();
+		}
 	}
 
 	#endregion
